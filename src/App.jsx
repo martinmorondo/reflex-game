@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './index.css';
 
 function App() {
@@ -8,6 +8,9 @@ function App() {
   const [playing, setPlaying] = useState(false);
   const intervalRef = useRef();
 
+  const [circleX, setCircleX] = useState(0);
+  const [circleY, setCircleY] = useState(0);
+
   // Start the game
   const handleStart = () => {
     setTimer(0);
@@ -16,7 +19,7 @@ function App() {
     startMoving();
     intervalRef.current = setInterval(() => {
       setTimer((prevTimer) => {
-        if (prevTimer < 60) {
+        if (prevTimer < 30) {
           return prevTimer + 1; 
         } else {
           clearInterval(intervalRef.current);
@@ -34,16 +37,37 @@ function App() {
   }
 
   const handleStop = () => {
-    clearInterval(intervalRef.current);
+    stopMoving();
     setPlaying(false);
     setTimer(0);
   }
 
+  const randomPosition = () => {
+    const maxX = window.innerWidth - 100;
+    const maxY = window.innerHeight - 100;
 
+    const newX = Math.floor(Math.random() * maxX);
+    const newY = Math.floor(Math.random() * maxY);
+
+    setCircleX(newX);
+    setCircleY(newY);
+  }
 
   const startMoving = () => {
+    randomPosition();
 
+    intervalRef.current = setInterval(() => {
+      randomPosition();
+    }, 2000);
   }
+
+  const stopMoving = () => {
+    clearInterval(intervalRef.current);
+  }
+
+  useEffect(() => {
+    randomPosition();
+  }, []);
 
   
   return (
@@ -53,7 +77,7 @@ function App() {
         <h2>{timer} Segundos</h2>
       </header>
       <section>
-        <figure onClick={handleCircleClick}>
+        <figure onClick={handleCircleClick} style={{ left: `${circleX}px`, top: `${circleY}px` }}>
           {score}
         </figure>
       </section>
