@@ -14,13 +14,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -31,9 +28,70 @@ body {
   min-height: 100vh;
 }
 
+main {
+  display: grid;
+  text-align: center;
+  height: 100vh;
+  width: 100vw;
+}
+
 h1 {
-  font-size: 3.2em;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
   line-height: 1.1;
+  color: #fff;
+}
+
+.circle {
+  cursor: pointer;
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: salmon;
+  transition: transform 0.5s ease-in-out;
+  top: 100px;
+  left: 40px;
+}
+
+.circle:hover {
+  transform: scale(1.2);
+  background-color: red;
+  font-weight: bold;
+}
+
+.circle.clicked {
+  animation: pulse 0.5s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.obstacle {
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: transform 0.5s ease-in-out;
+  left: 1000px;
+  bottom: 20px;
+}
+
+.obstacle:hover {
+  background-color: green;
 }
 
 button {
@@ -47,23 +105,31 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+  background-color: red;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.btn-play {
+  margin-right: 18px;
 }
+
+.btn-restart {
+  margin: 20px 15px 0px 0px;
+}
+
+.difficulty-buttons {
+  margin-top: 10px;
+}
+
+.difficulty-button {
+  margin-right: 10px;
+}
+
+
