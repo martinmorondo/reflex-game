@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import './index.css';
 
-import clickSound from "../src/sounds/Computer_Mouse_Click_01_Sound_Effect_Mp3_339.mp3";
-import stopSound from "../src/sounds/Computer_Mouse_Click_01_Sound_Effect_Mp3_339.mp3";
-import restartSound from "../src/sounds/Computer_Mouse_Click_01_Sound_Effect_Mp3_339.mp3";
+import clickSound from "../src/sounds/click-sound.mp3";
+import stopSound from "../src/sounds/click-sound.mp3";
+import restartSound from "../src/sounds/click-sound.mp3";
 
 
 function App() {
@@ -23,6 +23,10 @@ function App() {
   const clickAudioRef = useRef(null);
   const stopAudioRef = useRef(null);
   const restartAudioRef = useRef(null);
+
+  const [difficulty, setDifficulty] = useState(1);
+  const [circleClicked, setCircleClicked] = useState(false);
+
 
   const handleStart = () => {
     setTimer(0);
@@ -48,15 +52,20 @@ function App() {
       setScore((prevScore) => prevScore + 1);
       setCircleSize((prevSize) => prevSize - 4);
       clickAudioRef.current.play();
+      setCircleClicked(true);
+  
+      setTimeout(() => {
+        setCircleClicked(false);
+      }, 500); // Duración de la animación "pulse" en milisegundos
     }
   };
 
-  const handleStop = () => {
-    stopMoving();
-    setPlaying(false);
-    setTimer(0);
-    stopAudioRef.current.play();
-  };
+  // const handleStop = () => {
+  //   stopMoving();
+  //   setPlaying(false);
+  //   setTimer(0);
+  //   stopAudioRef.current.play();
+  // };
 
   const randomPosition = () => {
     const maxX = window.innerWidth - circleSize;
@@ -87,9 +96,8 @@ function App() {
     intervalRef.current = setInterval(() => {
       randomPosition();
       randomObstaclePosition();
-    }, 850);
+    }, getIntervalByDifficulty());
   };
-
   const stopMoving = () => {
     clearInterval(intervalRef.current);
   };
@@ -99,6 +107,25 @@ function App() {
       setHighestScore(score);
     }
   };
+
+  const getIntervalByDifficulty = () => {
+    switch (difficulty) {
+    case 1:
+    return 1000; // Nivel fácil: intervalo de 1 segundo
+    case 2:
+    return 750; // Nivel medio: intervalo de 0.75 segundos
+    case 3:
+    return 500; // Nivel difícil: intervalo de 0.5 segundos
+    default:
+    return 1000;
+    }
+    };
+    
+    const handleDifficultyChange = (level) => {
+    if (!playing) {
+    setDifficulty(level);
+    }
+    };
 
   useEffect(() => {
     randomPosition();
@@ -118,7 +145,7 @@ function App() {
       </header>
       <section>
         <figure
-          className="circle"
+           className={`circle ${circleClicked ? "clicked" : ""}`}
           onClick={handleCircleClick}
           style={{
             left: `${circleX}px`,
@@ -143,15 +170,39 @@ function App() {
         </figure>
       </section>
       <footer>
-        {!playing ? (
-          <button onClick={handleStart}>Jugar</button>
-        ) : (
-          <button onClick={handleStop}>Detener</button>
-        )}
-        <button onClick={handleRestart} className="btn-restart">
-          Reiniciar
+  {!playing ? (
+    <>
+      <button className='btn-play' onClick={handleStart}>Jugar</button>
+      <div className="difficulty-buttons">
+        <button
+          className={`difficulty-button ${difficulty === 1 ? "active" : ""}`}
+          onClick={() => handleDifficultyChange(1)}
+        >
+          Fácil
         </button>
-      </footer>
+        <button
+          className={`difficulty-button ${difficulty === 2 ? "active" : ""}`}
+          onClick={() => handleDifficultyChange(2)}
+        >
+          Medio
+        </button>
+        <button
+          className={`difficulty-button ${difficulty === 3 ? "active" : ""}`}
+          onClick={() => handleDifficultyChange(3)}
+        >
+          Difícil
+        </button>
+      </div>
+    </>
+  ) : (
+    <></>
+    // <button onClick={handleStop}>Detener</button>
+  )}
+  <button onClick={handleRestart} className="btn-restart">
+    Reiniciar
+  </button>
+</footer>
+
 
       <audio ref={clickAudioRef} src={clickSound} />
       <audio ref={stopAudioRef} src={stopSound} />
