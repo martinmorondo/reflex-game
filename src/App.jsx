@@ -5,13 +5,14 @@ import clickSound from "../src/sounds/click-sound.mp3";
 import stopSound from "../src/sounds/click-sound.mp3";
 import restartSound from "../src/sounds/click-sound.mp3";
 
-
 function App() {
   const [timer, setTimer] = useState(0);
   const [score, setScore] = useState(0);
   const [highestScore, setHighestScore] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(true);
   const intervalRef = useRef();
+  const [gameOver, setGameOver] = useState(false); 
 
   const [circleX, setCircleX] = useState(0);
   const [circleY, setCircleY] = useState(0);
@@ -32,6 +33,8 @@ function App() {
     setTimer(0);
     setScore(0);
     setPlaying(true);
+    setShowExplanation(false);
+    setGameOver(false); 
     startMoving();
     intervalRef.current = setInterval(() => {
       setTimer((prevTimer) => {
@@ -41,19 +44,24 @@ function App() {
           stopMoving();
           setPlaying(false);
           updateHighestScore();
+          setGameOver(true);
           return prevTimer;
         }
       });
     }, 1000);
   };
 
-  const handleCircleClick = () => {
+  const handleCircleClick = (type) => {
     if (playing) {
-      setScore((prevScore) => prevScore + 1);
+      if (type === "circle") {
+        setScore((prevScore) => prevScore + 1);
+      } else if (type === "obstacle") {
+        setScore((prevScore) => prevScore + 2);
+      }
       setCircleSize((prevSize) => prevSize - 4);
       clickAudioRef.current.play();
       setCircleClicked(true);
-  
+
       setTimeout(() => {
         setCircleClicked(false);
       }, 500); // Duración de la animación "pulse" en milisegundos
@@ -143,10 +151,17 @@ function App() {
         <h2>{timer} Segundos</h2>
         <h3>Puntaje más alto: {highestScore}</h3>
       </header>
+      <div className={`explanation ${showExplanation ? "" : "hidden"}`}>
+        <p>Juego de reflejos, donde tienes que ser rápido haciendo click en alguno de los dos círculos:</p>
+        <ul>
+          <li>El círculo grande vale 1 punto.</li>
+          <li>El círculo chico vale 2 puntos.</li>
+        </ul>
+      </div>
       <section>
         <figure
-           className={`circle ${circleClicked ? "clicked" : ""}`}
-          onClick={handleCircleClick}
+           className={`circle ${circleClicked ? "clicked" : ""} ${gameOver ? "hidden" : ""}`} // Agregar la clase "hidden" cuando el juego haya terminado
+           onClick={() => handleCircleClick("circle")}
           style={{
             left: `${circleX}px`,
             top: `${circleY}px`,
@@ -157,8 +172,8 @@ function App() {
           {score}
         </figure>
         <figure
-          className="obstacle"
-          onClick={handleCircleClick}
+          className={`obstacle ${gameOver ? "hidden" : ""}`} // Agregar la clase "hidden" cuando el juego haya terminado
+          onClick={() => handleCircleClick("obstacle")}
           style={{
             left: `${obstacleX}px`,
             top: `${obstacleY}px`,
