@@ -132,4 +132,34 @@ button:focus-visible {
   margin-right: 10px;
 }
 
+.explanation {
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgb(64, 64, 17);
+  width: 500px;
+  height: 150px;
+  padding: 10px;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
+.explanation p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.explanation ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.explanation li {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.hidden {
+  display: none;
+}
