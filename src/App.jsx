@@ -106,6 +106,7 @@ function App() {
       randomObstaclePosition();
     }, getIntervalByDifficulty());
   };
+
   const stopMoving = () => {
     clearInterval(intervalRef.current);
   };
@@ -217,7 +218,6 @@ function App() {
     Reiniciar
   </button>
 </footer>
-
 
       <audio ref={clickAudioRef} src={clickSound} />
       <audio ref={stopAudioRef} src={stopSound} />
