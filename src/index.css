@@ -133,9 +133,10 @@ button:focus-visible {
 }
 
 .explanation {
+  margin-top: 50px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgb(64, 64, 17);
+  border: 1px solid rgb(17, 64, 23);
   width: 500px;
   height: 150px;
   padding: 10px;
